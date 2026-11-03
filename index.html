@@ -96,8 +96,8 @@
     }
     const pct = a/c*100;
     // If below target: number of consecutive classes needed, assuming no absences.
-    const need = Math.max(0, Math.ceil((t*c-a)/(1-t/100)));
-    // If at/above target: maximum upcoming classes that can be missed while
+const targetRate = t / 100;
+const need = Math.max(0, Math.ceil((targetRate*c-a)/(1-targetRate)));    // If at/above target: maximum upcoming classes that can be missed while
     // remaining at/above target, assuming each class counts equally.
     const miss = Math.max(0, Math.floor(a/(t/100)-c+1e-9));
     $('percentage').textContent=pct.toFixed(2)+'%';
