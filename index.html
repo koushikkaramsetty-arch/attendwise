@@ -101,6 +101,7 @@ const need = Math.max(0, Math.ceil((targetRate*c-a)/(1-targetRate)));    // If a
     // remaining at/above target, assuming each class counts equally.
     const miss = Math.max(0, Math.floor(a/(t/100)-c+1e-9));
     $('percentage').textContent=pct.toFixed(2)+'%';
+    $('badge').textContent = pct+1e-9 >= t ? 'On target' : 'Below target';
     $('neededLabel').textContent=`Classes to attend to reach ${t}%`;
     $('bunkLabel').textContent=`Classes you can bunk and stay at ${t}% or above`;
     $('needed').textContent=pct+1e-9 >= t ? '0 (target reached)' : need;
