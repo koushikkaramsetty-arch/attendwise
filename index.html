@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Free attendance percentage calculator. Check your attendance, classes needed to reach your target, and safe classes you can miss.">
+  <meta name="theme-color" content="#2563eb">
+  <title>Attendance Calculator — Free Student Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#2563eb;--navy:#172554;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;--green:#15803d;--red:#b91c1c}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+    .wrap{max-width:980px;margin:auto;padding:22px 16px 40px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:24px}
+    .brand{font-weight:800;color:var(--navy);font-size:20px;letter-spacing:-.5px}.brand span{color:var(--blue)}
+    .tag{font-size:12px;color:var(--muted);background:#eaf1ff;padding:7px 10px;border-radius:999px}
+    .hero{text-align:center;margin:24px auto 28px;max-width:680px}.hero h1{font-size:clamp(28px,5vw,44px);letter-spacing:-1.5px;margin:0 0 10px}.hero p{color:var(--muted);line-height:1.6;margin:0}
+    .layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 30px rgba(15,23,42,.04)}
+    h2{font-size:18px;margin:0 0 18px} label{display:block;font-size:13px;font-weight:600;margin:14px 0 7px}
+    input,select{width:100%;border:1px solid #cbd5e1;border-radius:11px;padding:13px;font:inherit;background:#fff;color:var(--text);outline:none}
+    input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #dbeafe}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hint{font-size:12px;color:var(--muted);margin-top:6px}
+    button{border:0;background:var(--blue);color:#fff;font-weight:700;border-radius:12px;padding:14px 18px;width:100%;margin-top:18px;cursor:pointer;font:inherit}
+    button:hover{background:#1d4ed8}.secondary{background:#eff6ff;color:#1d4ed8;margin-top:9px}.secondary:hover{background:#dbeafe}
+    .result{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:10px}
+    .result span{font-size:13px;color:var(--muted)}.result strong{font-size:22px;display:block;margin-top:4px}
+    .status{padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.5;margin-top:12px;background:#eff6ff;color:#1e40af}
+    .status.good{background:#f0fdf4;color:var(--green)}.status.bad{background:#fef2f2;color:var(--red)}
+    .adslot{margin:20px 0;padding:15px;border:1px dashed #cbd5e1;border-radius:12px;text-align:center;color:#94a3b8;font-size:12px;min-height:90px;background:#ffffff80}
+    .full{grid-column:1/-1}.faq{line-height:1.7;color:#475569;font-size:14px}.faq h2{color:var(--text)}
+    footer{text-align:center;color:var(--muted);font-size:12px;padding:26px 0 8px}
+    @media(max-width:720px){.layout{grid-template-columns:1fr}.wrap{padding:16px 12px 30px}.card{padding:18px}.tag{display:none}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand">Attend<span>Wise</span></div><div class="tag">Free student attendance tool</div></header>
+  <section class="hero">
+    <h1>Attendance Calculator</h1>
+    <p>Know your attendance percentage, how many classes you need to attend to reach your goal, and how many classes you can safely miss.</p>
+  </section>
+
+  <div class="layout">
+    <section class="card">
+      <h2>Enter your attendance</h2>
+      <div class="grid2">
+        <div><label for="attended">Classes attended</label><input id="attended" type="number" min="0" step="1" value="60" inputmode="numeric"></div>
+        <div><label for="conducted">Classes conducted</label><input id="conducted" type="number" min="0" step="1" value="80" inputmode="numeric"></div>
+      </div>
+      <label for="target">Required attendance (%)</label>
+      <select id="target"><option value="75" selected>75% (common target)</option><option value="65">65%</option><option value="70">70%</option><option value="80">80%</option><option value="85">85%</option><option value="90">90%</option><option value="custom">Custom target</option></select>
+      <div id="customWrap" hidden><label for="customTarget">Custom target (%)</label><input id="customTarget" type="number" min="1" max="100" step="0.1" value="75"></div>
+      <button id="calculate">Calculate attendance</button>
+      <button class="secondary" id="reset">Reset values</button>
+      <p class="hint">Use the totals shown by your college portal. This calculator does not store your inputs.</p>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <h2>Your results</h2>
+      <div class="result"><div><span>Current attendance</span><strong id="percentage">75.00%</strong></div><span id="badge">On target</span></div>
+      <div class="result"><div><span id="neededLabel">Classes to attend to reach target</span><strong id="needed">0</strong></div></div>
+      <div class="result"><div><span id="bunkLabel">Classes you can bunk and stay on target</span><strong id="bunk">0</strong></div></div>
+      <div class="status" id="message">Enter your numbers and calculate.</div>
+    </section>
+
+    <!-- AdSense: replace the placeholder values only after your site is approved.
+         Add the official AdSense script in the head and an ad unit below.
+         Never click your own ads or encourage others to click them. -->
+    <div class="adslot full">Advertisement space — AdSense can be added after approval</div>
+
+    <section class="card full faq">
+      <h2>How it works</h2>
+      <p><b>Current percentage:</b> attended classes ÷ conducted classes × 100.</p>
+      <p><b>Below your target:</b> shows how many consecutive classes you need to attend without bunking to reach the selected attendance percentage.</p>
+      <p><b>At or above your target:</b> shows how many upcoming classes you can bunk while keeping attendance at or above your selected percentage, assuming each upcoming class is counted equally.</p>
+      <p><b>Important:</b> College attendance rules, lab periods, condonation, holidays, and subject-wise attendance may differ. Confirm with your college. This tool is an estimate, not an official attendance record.</p>
+    </section>
+  </div>
+  <footer>AttendWise · Free attendance calculator · Your entries stay in this browser session.</footer>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const attended = $('attended'), conducted = $('conducted'), target = $('target');
+  const customWrap = $('customWrap'), customTarget = $('customTarget');
+  target.addEventListener('change', () => customWrap.hidden = target.value !== 'custom');
+  function getTarget(){ return target.value === 'custom' ? Number(customTarget.value) : Number(target.value); }
+  function calculate(){
+    const a = Number(attended.value), c = Number(conducted.value), t = getTarget();
+    if(!Number.isInteger(a) || !Number.isInteger(c) || a < 0 || c < 0 || a > c || c === 0 || !Number.isFinite(t) || t <= 0 || t > 100){
+      $('message').className='status bad'; $('message').textContent='Please enter valid values: attended must be between 0 and conducted, conducted must be greater than 0, and target must be 1–100%.';
+      return;
+    }
+    const pct = a/c*100;
+    // If below target: number of consecutive classes needed, assuming no absences.
+    const need = Math.max(0, Math.ceil((t*c-a)/(1-t/100)));
+    // If at/above target: maximum upcoming classes that can be missed while
+    // remaining at/above target, assuming each class counts equally.
+    const miss = Math.max(0, Math.floor(a/(t/100)-c+1e-9));
+    $('percentage').textContent=pct.toFixed(2)+'%';
+    $('neededLabel').textContent=`Classes to attend to reach ${t}%`;
+    $('bunkLabel').textContent=`Classes you can bunk and stay at ${t}% or above`;
+    $('needed').textContent=pct+1e-9 >= t ? '0 (target reached)' : need;
+    $('bunk').textContent=pct+1e-9 >= t ? miss : '0 (below target)';
+    const msg=$('message');
+    if(pct+1e-9 >= t){
+      msg.className='status good';
+      msg.textContent=`Your attendance is ${pct.toFixed(2)}%, which is at/above ${t}%. You can miss up to ${miss} upcoming classes and remain at or above target, based on equal class counting.`;
+    } else {
+      msg.className='status bad';
+      msg.textContent=`Your attendance is ${pct.toFixed(2)}%, below ${t}%. Attend the next ${need} classes continuously (without bunking) to reach the target.`;
+    }
+  }
+  $('calculate').addEventListener('click',calculate);
+  $('reset').addEventListener('click',()=>{attended.value=60;conducted.value=80;target.value='75';customTarget.value=75;customWrap.hidden=true;calculate();});
+  [attended,conducted,customTarget].forEach(el=>el.addEventListener('input',calculate));
+  calculate();
+})();
+</script>
+</body>
+</html>
